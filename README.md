@@ -4,15 +4,18 @@
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/simple_http_server/)
 
 ```sh
-gleam add simple_http_server
+gleam run
+Listening localhost:3000
 ```
-```gleam
-import simple_http_server
 
-pub fn main() {
-  // TODO: An example of the project in use
-}
-```
+<!-- ```gleam -->
+<!-- import simple_http_server -->
+<!---->
+<!-- pub fn main() { -->
+<!--   // TODO: An example of the project in use -->
+<!-- } -->
+<!-- ``` -->
+<!---->
 
 Further documentation can be found at <https://hexdocs.pm/simple_http_server>.
 
