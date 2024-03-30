@@ -7,16 +7,15 @@ import gleam/dynamic.{type Dynamic}
 import utils/utils
 import path.{type Path}
 
-
 fn echo_(ctx: Request(Dynamic)) -> Response(BytesBuilder) {
   io.debug(ctx.body)
   case dynamic.string(ctx.body) {
     Ok(content) ->
       response.new(200)
-			|> utils.set_body(content)
+      |> utils.set_body(content)
     Error(errors) ->
       response.new(500)
-			|> utils.set_body(utils.parse_string_from(errors))
+      |> utils.set_body(utils.parse_string_from(errors))
   }
 }
 
@@ -25,7 +24,7 @@ pub fn handle(req: Request(body)) -> Response(BytesBuilder) {
   case path {
     path.Root ->
       response.new(200)
-			|> utils.set_body("hi!")
+      |> utils.set_body("hi!")
     path.Echo -> echo_(request.map(req, fn(bo) { dynamic.from(bo) }))
     path.NotFound ->
       response.new(404)
