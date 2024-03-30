@@ -13,7 +13,7 @@ fn echo_(ctx: Request(Dynamic)) -> Response(BytesBuilder) {
       |> response.set_body(bytes_builder.from_string(content))
     Error([e, ..]) ->
       response.new(500)
-      |> response.set_body(bytes_builder.from_string(e.expected))
+      |> response.set_body(bytes_builder.from_string("expected: " <> e.expected <> ", found: " <> e.found))
     Error([]) ->
       response.new(500)
       |> response.set_body(bytes_builder.from_string(
@@ -22,7 +22,7 @@ fn echo_(ctx: Request(Dynamic)) -> Response(BytesBuilder) {
   }
 }
 
-fn handle(req: Request(body)) -> Response(BytesBuilder) {
+pub fn handle(req: Request(body)) -> Response(BytesBuilder) {
   let path = req.path
   case path {
     // top
