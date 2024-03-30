@@ -4,54 +4,32 @@ import gleam/http/request.{type Request}
 import gleam/bytes_builder.{type BytesBuilder}
 import gleam/io
 import gleam/dynamic.{type Dynamic}
+import utils/utils
+import path.{type Path}
 
-fn parse_string_from(errors: List(dynamic.DecodeError)) -> String {
-	case errors {
-    [e, ..] -> "expected: " <> e.expected <> ", found: " <> e.found
-		[] -> "internal error decode to string..."
-	}
-}
-fn set_body(response: Response(t), str: String) -> response.Response(BytesBuilder) {
-	response
-      |> response.set_body(bytes_builder.from_string(str))
-}
 
 fn echo_(ctx: Request(Dynamic)) -> Response(BytesBuilder) {
   io.debug(ctx.body)
   case dynamic.string(ctx.body) {
     Ok(content) ->
       response.new(200)
-			|> set_body(content)
+			|> utils.set_body(content)
     Error(errors) ->
       response.new(500)
-			|> set_body(parse_string_from(errors))
-  }
-}
-
-pub type Path {
-  Root
-  Echo
-  NotFound
-}
-
-pub fn parse_path(path: String) -> Path {
-  case path {
-    "" | "/" -> Root
-    "/echo" -> Echo
-    _ -> NotFound
+			|> utils.set_body(utils.parse_string_from(errors))
   }
 }
 
 pub fn handle(req: Request(body)) -> Response(BytesBuilder) {
-  let path = parse_path(req.path)
+  let path = path.parse_path(req.path)
   case path {
-    Root ->
+    path.Root ->
       response.new(200)
-			|> set_body("hi!")
-    Echo -> echo_(request.map(req, fn(bo) { dynamic.from(bo) }))
-    NotFound ->
+			|> utils.set_body("hi!")
+    path.Echo -> echo_(request.map(req, fn(bo) { dynamic.from(bo) }))
+    path.NotFound ->
       response.new(404)
-      |> set_body("not found...")
+      |> utils.set_body("not found...")
   }
 }
 
